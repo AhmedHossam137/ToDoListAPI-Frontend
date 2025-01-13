@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ToDoListAPI.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ToDoListAPI.Controllers
 {
@@ -17,15 +20,15 @@ namespace ToDoListAPI.Controllers
 
         // GET: api/ToDoTasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ToDoTask>>> GetTasks(string? status, string? priority, DateTime? dueDate)
+        public async Task<ActionResult<IEnumerable<ToDoTask>>> GetTasks(string? status, Priority? priority, DateTime? dueDate)
         {
             var query = _context.Tasks.AsQueryable();
 
             if (!string.IsNullOrEmpty(status))
                 query = query.Where(t => t.Status == status);
 
-            if (!string.IsNullOrEmpty(priority))
-                query = query.Where(t => t.Priority == priority);
+            if (priority.HasValue)
+                query = query.Where(t => t.Priority == priority.Value);
 
             if (dueDate.HasValue)
                 query = query.Where(t => t.DueDate == dueDate.Value);
@@ -56,36 +59,8 @@ namespace ToDoListAPI.Controllers
 
             return CreatedAtAction("GetToDoTask", new { id = toDoTask.Id }, toDoTask);
         }
+       
 
-        // PUT: api/ToDoTasks/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutToDoTask(int id, ToDoTask toDoTask)
-        {
-            if (id != toDoTask.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(toDoTask).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ToDoTaskExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
 
         // DELETE: api/ToDoTasks/5
         [HttpDelete("{id}")]

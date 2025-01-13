@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List App</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>To-Do List</h1>
+  </header>
+  <main>
+    <!-- Add Task Form -->
+    <section id="task-form">
+      <h2>Add a Task</h2>
+      <form id="add-task-form">
+        <input type="text" id="title" placeholder="Task Title" required />
+        <textarea id="description" placeholder="Task Description"></textarea>
+        <select id="priority">
+          <option value="0">Low</option>
+          <option value="1" selected>Medium</option>
+          <option value="2">High</option>
+        </select>
+        <input type="date" id="due-date" />
+        <button type="submit">Add Task</button>
+      </form>
+    </section>
+
+    <!-- Display Tasks List -->
+    <section id="task-list">
+      <h2>Your Tasks</h2>
+      <ul id="tasks"></ul>
+    </section>
+
+    <!-- Get Task by ID -->
+    <section id="task-fetch">
+      <h2>Get Task by ID</h2>
+      <input type="number" id="task-id" placeholder="Enter Task ID" />
+      <button onclick="fetchTaskById()">Get Task</button>
+      <div id="task-details"></div> <!-- This will display the task details -->
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>

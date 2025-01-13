@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 
 namespace ToDoListAPI
@@ -10,18 +9,28 @@ namespace ToDoListAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // Add Swagger for API documentation
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("con")));
 
+            // Add database context
+            builder.Services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("con")));
+
+            // Add CORS configuration
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin", policy =>
+                    policy.WithOrigins("http://127.0.0.1:5500") // Front-end origin
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+            });
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -30,8 +39,10 @@ namespace ToDoListAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            // Enable CORS
+            app.UseCors("AllowSpecificOrigin");
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
