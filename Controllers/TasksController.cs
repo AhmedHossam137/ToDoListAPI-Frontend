@@ -77,6 +77,35 @@ namespace ToDoListAPI.Controllers
 
             return NoContent();
         }
+        // GET: api/ToDoTasks/5
+        //[HttpGet("{Priority}")]
+        //public async Task<ActionResult<ToDoTask>> GetToDoTaskPriority(int Priority)
+        //{
+        //    var toDoTask = await _context.Tasks.FindAsync(Priority);
+
+        //    if (toDoTask == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return toDoTask;
+        //}
+        // GET: api/ToDoTasks/Priority/High
+        [HttpGet("Priority/{priority}")]
+        public async Task<ActionResult<IEnumerable<ToDoTask>>> GetTasksByPriority(Priority priority)
+        {
+            // Use LINQ to filter tasks by the given priority
+            var tasks = await _context.Tasks
+                                      .Where(task => task.Priority == priority)
+                                      .ToListAsync();
+
+            if (tasks == null || !tasks.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(tasks);
+        }
 
         private bool ToDoTaskExists(int id)
         {
